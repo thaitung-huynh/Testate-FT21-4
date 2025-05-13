@@ -60,6 +60,6 @@ public class Cell {
     }
 
     public List<Border> allBorders() {
-        return List.of(getBorder(Direction.WEST), getBorder(Direction.EAST), getBorder(Direction.NORTH), getBorder(Direction.SOUTH));
+        return List.of(getBorder(Direction.NORTH), getBorder(Direction.EAST), getBorder(Direction.SOUTH), getBorder(Direction.WEST));
     }
 }
