@@ -1,5 +1,7 @@
 package maze;
 
+import java.util.Objects;
+
 public class Border {
     private final Cell cell;
     private final Direction dir;
@@ -40,14 +42,17 @@ public class Border {
             return cell.equals(b.cell.neighbor(Direction.EAST)) ||
                     cell.equals(b.cell.neighbor(Direction.SOUTH)) ||
                     cell.equals(b.cell.neighbor(Direction.WEST)) ||
-                    cell.equals(b.cell.neighbor(Direction.NORTH));
+                    cell.equals(b.cell.neighbor(Direction.NORTH)) || (cell.equals(b.cell) && dir == b.dir);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return cell.hashCode() + (dir == Direction.SOUTH || dir == Direction.EAST? 1 : 0);
+        Cell left = getLeft();
+        Cell right = getRight();
+
+        return left.getRow() + left.getColumn() + right.getRow() + right.getColumn();
     }
 
     @Override

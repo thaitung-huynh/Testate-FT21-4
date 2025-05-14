@@ -45,6 +45,7 @@ public class Controller extends MouseAdapter {
         else {
             final Cell targetCell = cell(p);
             view.setPath(view.getMaze().shortestPath(startCell, targetCell));
+            System.out.println(view.getMaze());
             startCell = null;
         }
     }

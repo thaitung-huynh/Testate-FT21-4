@@ -9,6 +9,7 @@ public class PathSearchTest {
     @Test
     public void solve1() {
         Maze maze = MazeParser.parse(ExampleMazes.PATH_1);
+
         assertEquals(path(0, 0, 0, 1, 0, 2, 0, 3, 0, 4),
                      new PathSearcher().shortestPath(maze,
                                                      new Cell(0, 0),

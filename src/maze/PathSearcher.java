@@ -1,87 +1,90 @@
 package maze;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class PathSearcher {
 
-    private class Pair {
-        int x, y;
-        Pair(int x, int y) {
+    private class NodeInStack {
+        int value, x, y;
+        public NodeInStack(int x, int y, int value) {
+            this.value = value;
             this.x = x;
             this.y = y;
         }
     }
-
-    private final Stack<Cell> stack = new Stack<>();
-    private boolean[][] passed;
+    // BFS
+    private final Queue<NodeInStack> queue = new LinkedList<>();
 
     public List<Cell> shortestPath(Maze maze, Cell start, Cell target) {
 
         int m = maze.getHeight();
         int n = maze.getWidth();
 
-        Pair[][] dad = new Pair[m][n];
-        passed = new boolean[m][n];
+        Cell[][] dad = new Cell[m][n];
+        int[][] D = new int[m][n];
 
 
         for (int i = 0; i < m; i++)
-            for (int j = 0; j < n; j++) passed[i][j] = false;
+            for (int j = 0; j < n; j++) D[i][j] = 1000000; // Init Max Value
 
 
-        passed[start.getRow()][start.getColumn()] = true;
-        dad[start.getRow()][start.getColumn()] = null;
+        if (maze.contains(start) && maze.contains(target)){
+            queue.add(new NodeInStack(start.getRow(), start.getColumn(), 0));
+            D[start.getRow()][start.getColumn()] = 0;
+        }
 
-        stack.push(start);
+        while (!queue.isEmpty()) {
+            NodeInStack curNode = queue.poll();
 
-        while (!stack.isEmpty()) {
-            Cell curCell = stack.pop();
+            if (D[curNode.x][curNode.y] != curNode.value) continue;
+
+            Cell curCell = new Cell(curNode.x, curNode.y);
+
 
             if (curCell.equals(target)) break;
 
+
             if (maze.canWalk(curCell, Direction.NORTH)) {
                 Cell next = curCell.neighbor(Direction.NORTH);
-                if (passed[next.getRow()][next.getColumn()]) continue;
-                stack.push(next);
-                dad[next.getRow()][next.getColumn()] = new Pair(curCell.getRow(), curCell.getColumn());
+                config(maze, dad, D, curCell, next);
             }
 
             if (maze.canWalk(curCell, Direction.SOUTH)) {
                 Cell next = curCell.neighbor(Direction.SOUTH);
-                if (passed[next.getRow()][next.getColumn()]) continue;
-                stack.push(next);
-                dad[next.getRow()][next.getColumn()] = new Pair(curCell.getRow(), curCell.getColumn());
+                config(maze, dad, D, curCell, next);
             }
 
             if (maze.canWalk(curCell, Direction.WEST)) {
                 Cell next = curCell.neighbor(Direction.WEST);
-                if (passed[next.getRow()][next.getColumn()]) continue;
-                stack.push(next);
-                dad[next.getRow()][next.getColumn()] = new Pair(curCell.getRow(), curCell.getColumn());
+                config(maze, dad, D, curCell, next);
+
             }
 
             if (maze.canWalk(curCell, Direction.EAST)) {
                 Cell next = curCell.neighbor(Direction.EAST);
-                if (passed[next.getRow()][next.getColumn()]) continue;
-                stack.push(next);
-                dad[next.getRow()][next.getColumn()] = new Pair(curCell.getRow(), curCell.getColumn());
+                config(maze, dad, D, curCell, next);
             }
         }
 
         List<Cell> path = new ArrayList<>();
 
-        int traceX = target.getRow();
-        int traceY = target.getColumn();
-
-        while (dad[traceX][traceY] != null) {
-            path.add(new Cell(traceX, traceY));
-            int newX = dad[traceX][traceY].x;
-            int newY = dad[traceX][traceY].y;
-            traceX = newX;
-            traceY = newY;
+        while (target != null && maze.contains(target) && (D[target.getRow()][target.getColumn()] != 1000000)) {
+            path.add(target);
+            target = dad[target.getRow()][target.getColumn()];
         }
 
         return path.reversed();
+    }
+
+    private void config(Maze maze, Cell[][] dad, int[][] d, Cell curCell, Cell next) {
+        if (maze.contains(next) && (d[next.getRow()][next.getColumn()] > d[curCell.getRow()][curCell.getColumn()] + 1)) {
+
+            d[next.getRow()][next.getColumn()] = d[curCell.getRow()][curCell.getColumn()] + 1;
+
+            queue.add(new NodeInStack(next.getRow(), next.getColumn(), d[next.getRow()][next.getColumn()]));
+
+            dad[next.getRow()][next.getColumn()] = curCell;
+
+        }
     }
 }
