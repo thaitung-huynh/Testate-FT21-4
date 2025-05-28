@@ -100,16 +100,19 @@ public class Maze {
 
     public Set<Border> getWalls() {
         Set<Border> walls = new HashSet<>();
-
         for (int x = 0; x < height; ++x)
             for (int y = 0; y < width; ++y) {
                 Cell cell = new Cell(x, y);
-                if (stoneInDir[x][y][N]) walls.add(new Border(cell, Direction.NORTH));
-                if (stoneInDir[x][y][E]) walls.add(new Border(cell, Direction.EAST));
-                if (stoneInDir[x][y][S]) walls.add(new Border(cell, Direction.SOUTH));
-                if (stoneInDir[x][y][W]) walls.add(new Border(cell, Direction.WEST));
-            }
 
+                if (stoneInDir[x][y][N]) walls.add(new Border(cell, Direction.NORTH));
+
+                if (stoneInDir[x][y][E]) walls.add(new Border(cell, Direction.EAST));
+
+                if (stoneInDir[x][y][S]) walls.add(new Border(cell, Direction.SOUTH));
+
+                if (stoneInDir[x][y][W]) walls.add(new Border(cell, Direction.WEST));
+
+            }
         return walls;
     }
 

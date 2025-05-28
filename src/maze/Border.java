@@ -1,7 +1,5 @@
 package maze;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Border {
@@ -53,9 +51,8 @@ public class Border {
     public int hashCode() {
         Cell left = getLeft();
         Cell right = getRight();
-        List<Integer> a = new ArrayList<>(List.of(left.getRow(), left.getColumn(), right.getRow(), right.getColumn()));
-        a.sort(Integer::compare);
-        return a.toString().hashCode();
+
+        return left.getRow() + left.getColumn() + right.getRow() + right.getColumn();
     }
 
     @Override
